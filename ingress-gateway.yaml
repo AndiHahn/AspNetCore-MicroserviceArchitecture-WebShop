@@ -32,4 +32,11 @@ spec:
               name: bffaggregator
               port:
                 number: 8080
+        - path: /api/order
+          pathType: Prefix
+          backend:
+            service:
+              name: order
+              port:
+                number: 8086
 ---

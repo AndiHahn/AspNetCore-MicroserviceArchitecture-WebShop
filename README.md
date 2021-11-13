@@ -13,7 +13,32 @@ Technologystack:
 - Redis
 - Postgres
 - RabbitMQ
-- Seq
+- Seq  
+
+
+## Run Project  
+### Local docker environment (use of envoy api gateway)  
+1. Ensure docker desktop is installed  
+2. Navigate to project root path and run command: ``` docker-compose up ```  
+3. Open Webshop at http://localhost:5000 or Status page at http://localhost:5010   
+4. Shut down docker with STRG+C  
+
+### Local docker environment with Visual Studio Debugger (use of envoy api gateway)  
+1. Select Docker-Compose as startup project
+2. Run project
+3. Open Webshop at http://localhost:5000 or Status page at http://localhost:5010  
+
+### Local single-node kubernetes cluster (use of kubernetes ingress as api gateway)  
+1. Ensure docker desktop is installed with kubernetes (single-node cluster) enabled  
+2. Install nginx ingress controller:  
+``` kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.46.0/deploy/static/provider/cloud/deploy.yaml ```
+3. Run services:  
+``` kubectl apply -f kubernetes.yaml ```
+4. Run api gatway:  
+``` kubectl apply -f ingress-gateway ``` 
+5. Open Webshop at http://localhost:5000 or Status page at http://localhost:5010   
+6. Shut down: run all kubectl commands in reverse order with keyword 'delete' instead of 'apply'
+
 
 ## Application Architecture
 
