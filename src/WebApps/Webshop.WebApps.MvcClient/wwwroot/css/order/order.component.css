@@ -1,0 +1,125 @@
+﻿.webshop-orders {
+    min-height: 80vh;
+    overflow-x: hidden;
+}
+
+.webshop-orders-header {
+    background-color: #00A69C;
+    height: 4rem;
+}
+
+.webshop-orders-back {
+    color: rgba(255, 255, 255, 0.4);
+    line-height: 4rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.35s;
+}
+
+.webshop-orders-back:hover {
+    color: #FFFFFF;
+    transition: color 0.35s;
+}
+
+.webshop-orders-titles {
+    padding-bottom: 1rem;
+    padding-top: 2rem;
+}
+
+.webshop-orders-title {
+    text-transform: uppercase;
+}
+
+.webshop-orders-items {
+    height: 3rem;
+    line-height: 3rem;
+    position: relative;
+}
+
+.webshop-orders-items:nth-of-type(2n + 1):before {
+    background-color: #EEEEFF;
+    content: '';
+    height: 100%;
+    left: 0;
+    margin-left: -100vw;
+    position: absolute;
+    top: 0;
+    width: 200vw;
+    z-index: -1;
+}
+
+.webshop-orders-item {
+    font-weight: 300;
+}
+
+.webshop-orders-item--hover {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.webshop-orders-items:hover .webshop-orders-item--hover {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.webshop-orders-link {
+    color: #00B9CF;
+    text-decoration: none;
+    transition: color 0.35s;
+}
+
+.webshop-orders-link:hover {
+    color: #0055FF;
+    transition: color 0.35s;
+}
+
+.webshop-orders-section {
+    padding: 1rem 0;
+}
+
+.webshop-orders-section-right {
+    text-align: right;
+}
+
+.webshop-orders-items-border {
+    border-bottom: 1px solid #EEEEEE;
+    padding: .5rem 0;
+}
+
+.webshop-orders-item {
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+.webshop-orders-item-middle {
+    line-height: 3rem;
+}
+
+.webshop-orders-item-mark {
+    color: #0055FF;
+}
+
+.webshop-orders-image {
+    height: 2rem;
+}
+
+
+.webshop-orders-placeOrder {
+    background-color: #00B9CF;
+    border: 0;
+    border-radius: 0;
+    color: #FFFFFF;
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 400;
+    margin-top: 1rem;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+    transition: all .35s;
+}
+
+.webshop-orders-placeOrder:hover {
+    background-color: #0055FF;
+    transition: all .35s;
+}

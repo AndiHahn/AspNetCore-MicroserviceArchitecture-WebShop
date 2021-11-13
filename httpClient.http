@@ -1,0 +1,54 @@
+#direct:
+#@aggregatorUrl = http://localhost:8080/api
+#@catalogUrl = http://localhost:8082/api
+#@basketUrl = http://localhost:8084/api
+
+#envoy api-gateway:
+@baseUrl = http://localhost:10000/api
+
+#kubernetes ingress:
+#@aggregatorUrl = http://localhost:80/api
+#@catalogUrl = http://localhost:80/api
+#@basketUrl = http://localhost:80/api
+
+###
+# @name ListAllProducts
+GET {{baseUrl}}/catalog
+Content-Type: application/json
+
+###
+# @name ListBasket
+GET {{baseUrl}}/basket
+Content-Type: application/json
+
+###
+# @name AddItemToBasket
+POST {{baseUrl}}/basket/items
+Content-Type: application/json
+
+{
+  "productId": "3a526d0e-6584-4a9c-b4b1-526a41c2279f",
+  "quantity": 1
+}
+
+###
+# @name CheckoutBasket
+POST {{baseUrl}}/basket/checkout
+Content-Type: application/json
+
+{
+  "buyer": "Andreas",
+  "zipCode": "3911",
+  "city": "Rappottenstein",
+  "street": "Rappottenstein 7/9",
+  "country": "Austria",
+  "creditCardHolder": "Andreas Hahn",
+  "creditCardNumber": "1234-5679-1234-5678",
+  "creditCardSecurityNumber": "123",
+  "creditCardExpiration": "2021-06-18T17:16:40"
+}
+
+###
+# @name ListOrders
+GET {{baseUrl}}/order
+Content-Type: application/json

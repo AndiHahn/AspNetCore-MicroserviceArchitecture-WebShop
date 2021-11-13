@@ -1,0 +1,59 @@
+﻿@model Webshop.WebApps.MvcClient.ViewModels.Basket
+
+@{
+    ViewData["Title"] = "Basket";
+}
+
+<div class="container">
+    <article class="webshop-basket-titles row">
+        <br />
+        <section class="webshop-basket-title col-3">Product</section>
+        <section class="webshop-basket-title col-3 hidden-lg-down"></section>
+        <section class="webshop-basket-title col-2">Price</section>
+        <section class="webshop-basket-title col-2">Quantity</section>
+        <section class="webshop-basket-title col-2">Cost</section>
+    </article>
+
+    @for (int i = 0; i < Model.Items.Count; i++)
+    {
+        var item = Model.Items[i];
+
+        <article class="webshop-basket-items row">
+            <section class="webshop-basket-item webshop-basket-item--middle col-lg-3 hidden-lg-down">
+                <img class="webshop-basket-image" src="@item.PictureUri" />
+            </section>
+            <section class="webshop-basket-item webshop-basket-item--middle col-3">@item.ProductName</section>
+            <section class="webshop-basket-item webshop-basket-item--middle col-2">@item.UnitPrice.ToString("N2") €</section>
+            <section class="webshop-basket-item webshop-basket-item--middle col-2">
+                <input type="hidden" name="@("quantities[" + i +"].Key")" value="@item.Id" />
+                <input type="number" class="webshop-basket-input" min="0" name="@("quantities[" + i +"].Value")" value="@item.Quantity" />
+            </section>
+            <section class="webshop-basket-item webshop-basket-item--middle webshop-basket-item--mark col-2">@Math.Round(item.Quantity * item.UnitPrice, 2).ToString("N2") €</section>
+        </article>
+        <br />
+    }
+
+    <div class="container">
+        <article class="webshop-basket-titles webshop-basket-titles--clean row">
+            <section class="webshop-basket-title col-10"></section>
+            <section class="webshop-basket-title col-2">Total</section>
+        </article>
+
+        <article class="webshop-basket-items row">
+            <section class="webshop-basket-item col-10"></section>
+            <section class="webshop-basket-item webshop-basket-item--mark col-2">@Model.Total().ToString("N2") €</section>
+        </article>
+
+        <article class="webshop-basket-items row">
+            <section class="webshop-basket-item col-7"></section>
+            <section class="webshop-basket-item col-2">
+                <button class="btn webshop-basket-checkout" name="name" value="" type="submit">Update</button>
+            </section>
+            <section class="webshop-basket-item col-3">
+                <input type="submit" class="btn webshop-basket-checkout" value="Checkout" name="action" />
+            </section>
+        </article>
+    </div>
+</div>
+
+

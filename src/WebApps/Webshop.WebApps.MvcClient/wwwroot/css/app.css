@@ -1,0 +1,39 @@
+﻿.form-input {
+    border-radius: 0;
+    height: 45px;
+    padding: 10px;
+}
+
+.form-input-small {
+    max-width: 100px !important;
+}
+
+.form-input-medium {
+    width: 150px !important;
+}
+
+a,
+a:active,
+a:hover,
+a:visited {
+    color: #000;
+    text-decoration: none;
+    transition: color 0.35s;
+}
+
+    a:hover,
+    a:active {
+        color: #00B9CF;
+        transition: color 0.35s;
+    }
+
+.alert {
+    padding-left: 0;
+}
+
+.alert-danger {
+    background-color: transparent;
+    border: 0;
+    color: #FB0D0D;
+    font-size: 12px;
+}

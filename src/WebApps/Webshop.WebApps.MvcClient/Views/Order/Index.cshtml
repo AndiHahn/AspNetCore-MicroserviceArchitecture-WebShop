@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Webshop.WebApps.MvcClient.ViewModels.Order>
+
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="webshop-orders">
+    <div class="container">
+        <article class="webshop-orders-titles row">
+            <section class="webshop-orders-title col-4">Date</section>
+            <section class="webshop-orders-title col-2">Total</section>
+            <section class="webshop-orders-title col-2">Status</section>
+            <section class="webshop-orders-title col-2"></section>
+        </article>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <article class="webshop-orders-items row">
+                    <section class="webshop-orders-item col-4">@Html.DisplayFor(modelItem => item.OrderDate)</section>
+                    <section class="webshop-orders-item col-2">$ @Html.DisplayFor(modelItem => item.TotalPrice)</section>
+                    <section class="webshop-orders-item col-2">@Html.DisplayFor(modelItem => item.Status)</section>
+                    <section class="webshop-orders-item col-1">
+                        <a class="webshop-orders-link" asp-controller="Order" asp-action="Detail" asp-route-orderId="@item.Id">Detail</a>
+                    </section>
+                </article>
+            }
+        }
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,14 @@
+﻿@model Webshop.WebApps.MvcClient.ViewModels.BasketViewModels.BasketComponentViewModel
+
+@{
+    ViewData["Title"] = "Basket status";
+}
+
+<a class="webshop-basketstatus @Model.Disabled" asp-area="" asp-controller="Basket" asp-action="Index">
+    <div class="webshop-basketstatus-image">
+        <img src="~/images/shopping-cart_36.png" />
+    </div>
+    <div class="webshop-basketstatus-badge">
+        @Model.ItemsCount
+    </div>
+</a>

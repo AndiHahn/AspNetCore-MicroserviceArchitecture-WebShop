@@ -1,0 +1,27 @@
+﻿@model Webshop.WebApps.MvcClient.ViewModels.CatalogViewModels.IndexViewModel
+
+@{
+    ViewData["Title"] = "Catalog";
+}
+
+<h1>Catalog items</h1>
+
+<div class="container">
+    @if (Model.CatalogItems.Any())
+    {
+        <div class="webshop-catalog-items row">
+            @foreach (var catalogItem in Model.CatalogItems)
+            {
+                <div class="webshop-catalog-item col-md-4">
+                    <partial name="_product" model="catalogItem" />
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="webshop-catalog-items row">
+            No products are available...
+        </div>
+    }
+</div>

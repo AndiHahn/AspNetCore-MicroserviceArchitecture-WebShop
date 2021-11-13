@@ -1,0 +1,12 @@
+﻿@model Webshop.WebApps.MvcClient.ViewModels.Basket
+
+@{
+    ViewData["Title"] = "My Basket";
+}
+
+<form method="post" id="cartForm">
+    <div class="webshop-basket">
+
+        @await Component.InvokeAsync("BasketList")
+    </div>
+</form>

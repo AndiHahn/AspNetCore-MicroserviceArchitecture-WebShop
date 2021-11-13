@@ -1,0 +1,73 @@
+version: '3.4'
+
+services:
+  webshop.webapps.mvcclient:
+    image: ${DOCKER_REGISTRY-}webshopmvcclient
+    build:
+      context: .
+      dockerfile: src/WebApps/Webshop.WebApps.MvcClient/Dockerfile
+
+  webshop.webapps.servicestatus:
+    image: ${DOCKER_REGISTRY-}webshopservicestatus
+    build:
+      context: .
+      dockerfile: src/WebApps/Webshop.WebApps.ServiceStatus/Dockerfile
+
+  webshop.apigateway:
+    image: ${DOCKER_REGISTRY-}webshopapigateway
+    build:
+      context: .
+      dockerfile: src/ApiGateways/Envoy/Dockerfile
+    
+  webshop.apigateway.bffaggregator:
+    image: ${DOCKER_REGISTRY-}webshopapigatewaybffaggregator
+    build:
+      context: .
+      dockerfile: src/ApiGateways/Webshop.ApiGateways.Bff.Aggregator/Dockerfile
+    depends_on: 
+      - "webshop.seq"
+
+  webshop.services.catalog.api:
+    image: ${DOCKER_REGISTRY-}webshopservicescatalogapi
+    build:
+      context: .
+      dockerfile: src/Services/Webshop.Services.Catalog.Api/Dockerfile
+    depends_on: 
+      - "webshop.seq"
+
+  webshop.services.basket.api:
+    image: ${DOCKER_REGISTRY-}webshopservicesbasketapi
+    build:
+      context: .
+      dockerfile: src/Services/Webshop.Services.Basket.Api/Dockerfile
+    depends_on: 
+      - "webshop.services.basket.redis"
+      - "webshop.seq"
+      - "webshop.rabbitmq"
+
+  webshop.services.basket.redis:
+    image: redis:alpine
+
+  webshop.services.order.api:
+    image: ${DOCKER_REGISTRY-}webshopservicesorderapi
+    build:
+      context: .
+      dockerfile: src/Services/Webshop.Services.Order.Api/Dockerfile
+    depends_on: 
+      - "webshop.services.order.postgres"
+      - "webshop.rabbitmq"
+      - "webshop.seq"
+
+  webshop.services.order.postgres:
+    image: postgres:latest
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://webshop.services.order.postgres:5432"]
+      interval: 2s
+      timeout: 2s
+      retries: 5
+
+  webshop.seq:
+    image: datalust/seq:latest
+
+  webshop.rabbitmq:
+    image: rabbitmq:3-management-alpine

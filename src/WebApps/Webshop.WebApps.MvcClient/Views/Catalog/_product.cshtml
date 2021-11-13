@@ -1,0 +1,16 @@
+﻿@model CatalogItem
+
+<form asp-controller="Basket" asp-action="AddToBasket">
+
+    <img class="webshop-catalog-thumbnail" src="@Model.PictureUri" />
+    <input class="webshop-catalog-button" type="submit" value="ADD TO BASKET" />
+
+    <div class="webshop-catalog-name">
+        <span>@Model.Name</span>
+    </div>
+    <div class="webshop-catalog-price">
+        <span>@Model.Price.ToString("N2") €</span>
+    </div>
+
+    <input type="hidden" asp-for="@Model.Id" name="id" />
+</form>

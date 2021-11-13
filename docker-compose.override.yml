@@ -1,0 +1,106 @@
+version: '3.4'
+
+services:
+  webshop.webapps.mvcclient:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:80
+      ApiBaseUrl: http://webshop.apigateway:10100/api
+      Serilog__SeqServerUrl: http://webshop.seq:5341
+    ports:
+      - "5000:80"
+
+  webshop.webapps.servicestatus:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:80
+      Serilog__SeqServerUrl: http://webshop.seq:5341
+      HealthChecksUI__HealthChecks__0__Name: Webapp MVC Client
+      HealthChecksUI__HealthChecks__0__Uri: http://webshop.webapps.mvcclient/hc
+      HealthChecksUI__HealthChecks__1__Name: BFF Aggregator API
+      HealthChecksUI__HealthChecks__1__Uri: http://webshop.apigateway.bffaggregator/hc
+      HealthChecksUI__HealthChecks__2__Name: Catalog API
+      HealthChecksUI__HealthChecks__2__Uri: http://webshop.services.catalog.api/hc
+      HealthChecksUI__HealthChecks__3__Name: Basket API
+      HealthChecksUI__HealthChecks__3__Uri: http://webshop.services.basket.api/hc
+      HealthChecksUI__HealthChecks__4__Name: Order API
+      HealthChecksUI__HealthChecks__4__Uri: http://webshop.services.order.api/hc
+    ports:
+      - "5010:80"
+
+  webshop.apigateway:
+    ports:
+      - "9901:9901"
+      - "10100:10000"
+    
+  webshop.apigateway.bffaggregator:
+    environment: 
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:80
+      ServiceUrls__GrpcCatalog: http://webshop.services.catalog.api:81
+      ServiceUrls__GrpcBasket: http://webshop.services.basket.api:81
+      ServiceUrls__CatalogHealth: http://webshop.services.catalog.api:80/hc
+      ServiceUrls__BasketHealth: http://webshop.services.basket.api:80/hc
+      Serilog__SeqServerUrl: http://webshop.seq:5341
+    ports:
+      - "8080:80" 
+
+  webshop.services.catalog.api:
+    environment:
+      Serilog__SeqServerUrl: http://webshop.seq:5341
+    ports:
+      - "8082:80"
+      - "8083:81"
+
+  webshop.services.basket.api:
+    environment: 
+      ASPNETCORE_ENVIRONMENT: Development
+      Serilog__SeqServerUrl: http://webshop.seq:5341
+      Redis__ConnectionString: webshop.services.basket.redis:6379
+      RabbitMQ__HostName: webshop.rabbitmq
+      RabbitMQ__UserName: guest
+      RabbitMQ__Password: guest
+      RabbitMQ__BrokerName: webshop.broker
+      RabbitMQ__QueueName: webshop-event-queue
+    ports:
+      - "8084:80"
+      - "8085:81"
+
+  webshop.services.basket.redis:
+    ports: 
+      - "6379:6379"
+
+  webshop.services.order.api:
+    environment: 
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:80
+      Serilog__SeqServerUrl: http://webshop.seq:5341
+      RabbitMQ__HostName: webshop.rabbitmq
+      RabbitMQ__UserName: guest
+      RabbitMQ__Password: guest
+      RabbitMQ__BrokerName: webshop.broker
+      RabbitMQ__QueueName: webshop-event-queue
+      ConnectionStrings__ApplicationDb: "Host=webshop.services.order.postgres;Database=webshop_order_db;Username=order_user;Password=order_password"
+    ports:
+      - "8086:80"
+      - "8087:81"
+
+  webshop.services.order.postgres:
+    hostname: webshop_order_db
+    environment:
+      POSTGRES_DB: webshop_order_db
+      POSTGRES_USER: order_user
+      POSTGRES_PASSWORD: order_password
+    ports:
+      - "5432:5432" 
+
+  webshop.seq:
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:80"   
+
+  webshop.rabbitmq:
+    ports:
+      - "15672:15672"
+      - "5672:5672"

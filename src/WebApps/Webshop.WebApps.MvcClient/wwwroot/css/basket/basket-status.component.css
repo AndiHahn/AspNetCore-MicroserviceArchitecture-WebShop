@@ -1,0 +1,39 @@
+﻿.webshop-basketstatus {
+    cursor: pointer;
+    display: inline-block;
+    float: right;
+    position: relative;
+    transition: all 0.35s;
+}
+
+.webshop-basketstatus.is-disabled {
+        opacity: .5;
+        pointer-events: none;
+    }
+
+.webshop-basketstatus-image {
+    height: 36px;
+    margin-left: 2.5rem;
+    margin-top: 1rem;
+}
+
+.webshop-basketstatus-badge {
+    background-color: #00B9CF;
+    border-radius: 50%;
+    color: #FFFFFF;
+    display: block;
+    height: 1.5rem;
+    left: 50%;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    transform: translateX(-38%);
+    transition: all 0.35s;
+    width: 1.5rem;
+}
+
+.webshop-basketstatus:hover .esh-basketstatus-badge {
+    background-color: transparent;
+    color: #0055FF;
+    transition: all 0.35s;
+}

@@ -1,0 +1,58 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: webshop-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: webshop
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - webshop-gateway
+  http:
+    - match:
+      - uri:
+          exact: /api/basket/items
+      route:
+      - destination:
+          host: bffaggregator
+          port:
+            number: 8080
+    - match:
+      - uri:
+          prefix: /api/catalog
+      route:
+      - destination:
+          host: catalog
+          port:
+            number: 8082
+    - match:
+      - uri:
+          prefix: /api/basket
+      route:
+      - destination:
+          host: basket
+          port:
+            number: 8084
+    - match:
+      - uri:
+          prefix: /api/order
+      route:
+      - destination:
+          host: order
+          port:
+            number: 8086
+    

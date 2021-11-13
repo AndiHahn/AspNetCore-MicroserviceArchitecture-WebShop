@@ -1,0 +1,52 @@
+﻿.webshop-orders_detail {
+    min-height: 80vh;
+}
+
+.webshop-orders_detail-section {
+    padding: 1rem 0;
+}
+
+.webshop-orders_detail-section--right {
+    text-align: right;
+}
+
+.webshop-orders_detail-titles {
+    padding-bottom: 1rem;
+    padding-top: 2rem;
+}
+
+.webshop-orders_detail-title {
+    text-transform: uppercase;
+}
+
+.webshop-orders_detail-items--border {
+    border-bottom: 1px solid #EEEEEE;
+    padding: .5rem 0;
+}
+
+.webshop-orders_detail-items--border:last-of-type {
+        border-color: transparent;
+    }
+
+.webshop-orders_detail-item {
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+.webshop-orders_detail-item--middle {
+    line-height: 8rem;
+}
+
+@media screen and (max-width: 768px) {
+    .webshop-orders_detail-item--middle {
+        line-height: 1rem;
+    }
+}
+
+.webshop-orders_detail-item--mark {
+    color: #00B9CF;
+}
+
+.webshop-orders_detail-image {
+    height: 8rem;
+}

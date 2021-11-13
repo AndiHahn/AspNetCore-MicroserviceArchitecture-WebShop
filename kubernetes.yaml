@@ -1,0 +1,598 @@
+﻿############################################################
+# Catalog Service
+############################################################
+apiVersion: v1
+kind: Service
+metadata:
+    name: catalog
+    labels:
+      app: catalog
+      service: catalog
+spec:
+    ports:
+    - port: 8082
+      protocol: TCP
+      targetPort: 80
+      name: http-port
+    - port: 8083
+      protocol: TCP
+      targetPort: 81
+      name: grpc-port
+    selector:
+        app: catalog
+    #type: ClusterIP
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: webshop-catalog
+  labels:
+    account: catalog
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-v1
+  labels:
+    app: catalog
+    version: v1
+spec:
+   replicas: 1
+   selector:
+     matchLabels:
+       app: catalog
+       version: v1
+   template:
+     metadata:
+       labels:
+         app: catalog
+         version: v1
+     spec:
+       serviceAccountName: webshop-catalog
+       containers:
+         - name: catalog
+           image: webshopservicescatalogapi:latest
+           imagePullPolicy: IfNotPresent
+           ports:
+             - containerPort: 80
+               protocol: TCP
+               name: default-port
+             - containerPort: 81
+               protocol: TCP
+               name: grpc-port
+           env:
+             - name: Serilog__SeqServerUrl
+               value: http://seqlogging:5341
+---
+############################################################
+# Basket Service
+############################################################
+apiVersion: v1
+kind: Service
+metadata:
+    name: basket
+    labels:
+      app: basket
+      service: basket
+spec:
+    ports:
+    - port: 8084
+      protocol: TCP
+      targetPort: 80
+      name: http-port
+    - port: 8085
+      protocol: TCP
+      targetPort: 81
+      name: grpc-port
+    selector:
+        app: basket
+    #type: ClusterIP
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: webshop-basket
+  labels:
+    account: basket
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basket-v1
+  labels:
+    app: basket
+    version: v1
+spec:
+   replicas: 2
+   selector:
+     matchLabels:
+       app: basket
+       version: v1
+   template:
+     metadata:
+       labels:
+         app: basket
+         version: v1
+     spec:
+       serviceAccountName: webshop-basket
+       containers:
+         - name: basket
+           image: webshopservicesbasketapi:latest
+           imagePullPolicy: IfNotPresent
+           ports:
+             - containerPort: 80
+               protocol: TCP
+               name: default-port
+             - containerPort: 81
+               protocol: TCP
+               name: grpc-port
+           env:
+             - name: Redis__ConnectionString
+               value: basketredis:6379
+             - name: Serilog__SeqServerUrl
+               value: http://seqlogging:5341
+             - name: RabbitMQ__HostName
+               value: rabbitmqbroker
+             - name: RabbitMQ__UserName
+               value: guest
+             - name: RabbitMQ__Password
+               value: guest
+             - name: RabbitMQ__BrokerName
+               value: webshop.broker
+             - name: RabbitMQ__QueueName
+               value: webshop-event-queue
+---
+############################################################
+# Basket Service - REDIS
+############################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: basketredis
+  labels:
+    app: basketredis
+    service: basketredis
+spec:
+    ports:
+    - port: 6379
+      protocol: TCP
+      targetPort: 6379
+    selector:
+      app: basketredis
+    type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basketredis
+  labels:
+    app: basketredis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: basketredis
+  template:
+    metadata:
+      labels:
+        app: basketredis
+    spec:
+      containers:
+        - name: basketredis
+          image: redis:alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+---
+############################################################
+# Order Service
+############################################################
+apiVersion: v1
+kind: Service
+metadata:
+    name: order
+    labels:
+      app: order
+      service: order
+spec:
+    ports:
+    - port: 8086
+      protocol: TCP
+      targetPort: 80
+      name: http-port
+    selector:
+        app: order
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: webshop-order
+  labels:
+    account: order
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-v1
+  labels:
+    app: order
+    version: v1
+spec:
+   replicas: 1
+   selector:
+     matchLabels:
+       app: order
+       version: v1
+   template:
+     metadata:
+       labels:
+         app: order
+         version: v1
+     spec:
+       serviceAccountName: webshop-order
+       containers:
+         - name: order
+           image: webshopservicesorderapi:latest
+           imagePullPolicy: IfNotPresent
+           ports:
+             - containerPort: 80
+               protocol: TCP
+               name: default-port
+           env:
+             - name: Serilog__SeqServerUrl
+               value: http://seqlogging:5341
+             - name: RabbitMQ__HostName
+               value: rabbitmqbroker
+             - name: RabbitMQ__UserName
+               value: guest
+             - name: RabbitMQ__Password
+               value: guest
+             - name: RabbitMQ__BrokerName
+               value: webshop.broker
+             - name: RabbitMQ__QueueName
+               value: webshop-event-queue
+             - name: ConnectionStrings__ApplicationDb
+               value: Host=orderpostgres;Database=orderpostgres;Username=order_user;Password=order_password
+---
+############################################################
+# Order Service - POSTGRES
+############################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: orderpostgres
+  labels:
+    app: orderpostgres
+    service: orderpostgres
+spec:
+    ports:
+    - port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      app: orderpostgres
+    type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orderpostgres
+  labels:
+    app: orderpostgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orderpostgres
+  template:
+    metadata:
+      labels:
+        app: orderpostgres
+    spec:
+      containers:
+        - name: orderpostgres
+          image: postgres:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: orderpostgres
+            - name: POSTGRES_USER
+              value: order_user
+            - name: POSTGRES_PASSWORD
+              value: order_password
+---
+############################################################
+# BFF Aggregator Service
+############################################################
+apiVersion: v1
+kind: Service
+metadata:
+    name: bffaggregator
+    labels:
+      app: bffaggregator
+      service: bffaggregator
+spec:
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 80
+      name: http-port
+    selector:
+        app: bffaggregator
+    #type: ClusterIP
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: webshop-bffaggregator
+  labels:
+    account: bffaggregator
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bffaggregator-v1
+  labels:
+    app: bffaggregator
+    version: v1
+spec:
+   replicas: 2
+   selector:
+     matchLabels:
+       app: bffaggregator
+       version: v1
+   template:
+     metadata:
+       labels:
+         app: bffaggregator
+         version: v1
+     spec:
+       serviceAccountName: webshop-bffaggregator
+       containers:
+         - name: bffaggregator
+           image: webshopapigatewaybffaggregator:latest
+           imagePullPolicy: IfNotPresent
+           ports:
+             - containerPort: 80
+               protocol: TCP
+           env:
+             - name: ServiceUrls__GrpcCatalog
+               value: http://catalog:8083
+             - name: ServiceUrls__GrpcBasket
+               value: http://basket:8085
+             - name: ServiceUrls__CatalogHealth
+               value: http://catalog:8082/hc
+             - name: ServiceUrls__BasketHealth
+               value: http://basket:8084/hc
+             - name: Serilog__SeqServerUrl
+               value: http://seqlogging:5341
+---
+############################################################
+# Rabbit MQ
+############################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmqbroker
+  labels:
+    app: rabbitmqbroker
+    service: rabbitmqbroker
+spec:
+    ports:
+    - port: 5672
+      protocol: TCP
+      targetPort: 5672
+    selector:
+      app: rabbitmqbroker
+    type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmqbroker
+  labels:
+    app: rabbitmqbroker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmqbroker
+  template:
+    metadata:
+      labels:
+        app: rabbitmqbroker
+    spec:
+      containers:
+        - name: rabbitmqbroker
+          image: rabbitmq:3-management-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5672
+---
+############################################################
+# Logging Service
+############################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: seqlogging
+spec:
+    ports:
+    - port: 5341
+      protocol: TCP
+      targetPort: 80
+      name: http-port
+    selector:
+      app: seqlogging
+    type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seqlogging
+  labels:
+    app: seqlogging
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: seqlogging
+  template:
+    metadata:
+      labels:
+        app: seqlogging
+    spec:
+      containers:
+        - name: seqlogging
+          image: datalust/seq:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+---
+############################################################
+# MVC Client
+############################################################
+apiVersion: v1
+kind: Service
+metadata:
+    name: mvcclient
+    labels:
+      app: mvcclient
+      service: mvcclient
+spec:
+    ports:
+    - port: 5000
+      protocol: TCP
+      targetPort: 80
+      name: http-port
+    selector:
+        app: mvcclient
+    type: LoadBalancer
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: webshop-mvcclient
+  labels:
+    account: mvcclient
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mvcclient-v1
+  labels:
+    app: mvcclient
+    version: v1
+spec:
+   replicas: 1
+   selector:
+     matchLabels:
+       app: mvcclient
+       version: v1
+   template:
+     metadata:
+       labels:
+         app: mvcclient
+         version: v1
+     spec:
+       serviceAccountName: webshop-mvcclient
+       containers:
+         - name: mvcclient
+           image: webshopmvcclient:latest
+           imagePullPolicy: IfNotPresent
+           ports:
+             - containerPort: 80
+               protocol: TCP
+               name: default-port
+           env:
+             - name: Serilog__SeqServerUrl
+               value: http://seqlogging:5341
+             - name: ApiBaseUrl
+               value: http://192.168.178.40:80/api
+             - name: ASPNETCORE_ENVIRONMENT
+               value: Development
+---
+############################################################
+# Service Status
+############################################################
+apiVersion: v1
+kind: Service
+metadata:
+    name: servicestatus
+    labels:
+      app: servicestatus
+      service: servicestatus
+spec:
+    ports:
+    - port: 5010
+      protocol: TCP
+      targetPort: 80
+      name: http-port
+    selector:
+        app: servicestatus
+    type: LoadBalancer
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: webshop-servicestatus
+  labels:
+    account: servicestatus
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: servicestatus-v1
+  labels:
+    app: servicestatus
+    version: v1
+spec:
+   replicas: 1
+   selector:
+     matchLabels:
+       app: servicestatus
+       version: v1
+   template:
+     metadata:
+       labels:
+         app: servicestatus
+         version: v1
+     spec:
+       serviceAccountName: webshop-servicestatus
+       containers:
+         - name: servicestatus
+           image: webshopservicestatus:latest
+           imagePullPolicy: IfNotPresent
+           ports:
+             - containerPort: 80
+               protocol: TCP
+               name: default-port
+           env:
+             - name: Serilog__SeqServerUrl
+               value: http://seqlogging:5341
+             - name: HealthChecksUI__HealthChecks__0__Name
+               value: Webapp MVC Client
+             - name: HealthChecksUI__HealthChecks__0__Uri
+               value: http://mvcclient:5000/hc
+             - name: HealthChecksUI__HealthChecks__1__Name
+               value: BFF Aggregator API
+             - name: HealthChecksUI__HealthChecks__1__Uri
+               value: http://bffaggregator:8080/hc
+             - name: HealthChecksUI__HealthChecks__2__Name
+               value: Catalog API
+             - name: HealthChecksUI__HealthChecks__2__Uri
+               value: http://catalog:8082/hc
+             - name: HealthChecksUI__HealthChecks__3__Name
+               value: Basket API
+             - name: HealthChecksUI__HealthChecks__3__Uri
+               value: http://basket:8084/hc
+             - name: HealthChecksUI__HealthChecks__4__Name
+               value: Order API
+             - name: HealthChecksUI__HealthChecks__4__Uri
+               value: http://order:8086/hc
+---

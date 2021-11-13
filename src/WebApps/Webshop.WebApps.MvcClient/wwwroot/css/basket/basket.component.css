@@ -1,0 +1,91 @@
+﻿.webshop-basket {
+    min-height: 80vh;
+}
+
+.webshop-basket-titles {
+    padding-bottom: 1rem;
+    padding-top: 2rem;
+}
+
+.webshop-basket-titles--clean {
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.webshop-basket-title {
+    text-transform: uppercase;
+}
+
+.webshop-basket-items--border {
+    border-bottom: 1px solid #EEEEEE;
+    padding: .5rem 0;
+}
+
+.webshop-basket-items--border:last-of-type {
+        border-color: transparent;
+    }
+
+.webshop-basket-items-margin-left1 {
+    margin-left: 1px;
+}
+
+.webshop-basket-item {
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+.webshop-basket-item--middle {
+    line-height: 8rem;
+}
+
+@media screen and (max-width: 1024px) {
+    .webshop-basket-item--middle {
+        line-height: 1rem;
+    }
+}
+
+.webshop-basket-item--mark {
+    color: #00A69C;
+}
+
+.webshop-basket-image {
+    height: 8rem;
+}
+
+.webshop-basket-input {
+    line-height: 1rem;
+    width: 100%;
+}
+
+.webshop-basket-checkout {
+    background-color: #00B9CF;
+    border: 0;
+    border-radius: 0;
+    color: #FFFFFF;
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 400;
+    margin-top: 1rem;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+    transition: all 0.35s;
+}
+
+.webshop-basket-checkout:hover {
+    background-color: #0055FF;
+    transition: all 0.35s;
+}
+
+.webshop-basket.items .border {
+    border-bottom: 1px solid #EEEEEE;
+    padding: 0.5rem 0;
+}
+
+.webshop-basket.items .border .last-of-type {
+    border-color: transparent;
+}
+
+.webshop-basket.items .margin-left1 {
+    margin-left: 1px;
+}

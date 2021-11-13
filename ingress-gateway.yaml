@@ -1,0 +1,35 @@
+﻿############################################################
+# Kubernetes Ingress Gateway
+############################################################
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: webshop-api-ingress
+    annotations:
+     #nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+    rules:
+    - http:
+        paths:
+        - path: /api/catalog
+          pathType: Prefix
+          backend:
+            service:
+              name: catalog
+              port:
+                number: 8082
+        - path: /api/basket
+          pathType: Prefix
+          backend:
+            service:
+              name: basket
+              port:
+                number: 8084
+        - path: /api/basket/items
+          pathType: Prefix
+          backend:
+            service:
+              name: bffaggregator
+              port:
+                number: 8080
+---
