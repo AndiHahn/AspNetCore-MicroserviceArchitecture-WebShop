@@ -44,7 +44,7 @@ Technologystack:
 
 Overview of the application architecture:  
 
-![Picture application architecture](https://github.com/sve2-2021ss/project-hahn/blob/master/doc/Architecture.png)
+![Picture application architecture](https://github.com/AndiHahn/AspNetCore-MicroserviceArchitecture-WebShop/blob/master/doc/Architecture.png)
 
 #### Catalog-Service
 Handles available products for a web-shop. Provides data via REST and as gRPC-server.  
@@ -98,13 +98,13 @@ with the backend through the API-Gaetway.
 An ASP .NET Core MVC Web client (Frontend) for displaying the Health-Status of all
 Services.
 
-![Picture webstatus ui](https://github.com/sve2-2021ss/project-hahn/blob/master/doc/webstatus.PNG)
+![Picture webstatus ui](https://github.com/AndiHahn/AspNetCore-MicroserviceArchitecture-WebShop/blob/master/doc/webstatus.PNG)
 
 ## Application hosting
 
 Overview of the application hosting architecture:  
 
-![Picture application architecture](https://github.com/sve2-2021ss/project-hahn/blob/master/doc/Architecture_hosting.png)
+![Picture application architecture](https://github.com/AndiHahn/AspNetCore-MicroserviceArchitecture-WebShop/blob/master/doc/Architecture_hosting.png)
 
 The application is hosted in a Single-node Kubernetes cluster. (Docker Desktop)
 
@@ -224,7 +224,7 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
         });
 ```
 
-![Picture Seq](https://github.com/sve2-2021ss/project-hahn/blob/master/doc/seq.PNG)
+![Picture Seq](https://github.com/AndiHahn/AspNetCore-MicroserviceArchitecture-WebShop/blob/master/doc/seq.PNG)
 
 # Conclusion
 With microservice architectures there are some difficulties to deal with. With various tools, these complexities 
@@ -238,8 +238,8 @@ By using microservice architectures, we can scale applications more efficient an
 
 # Screenshots application
 
-![Picture webshop ui](https://github.com/sve2-2021ss/project-hahn/blob/master/doc/shop_1.PNG)
-![Picture webshop ui](https://github.com/sve2-2021ss/project-hahn/blob/master/doc/shop_2.PNG)
-![Picture webshop ui](https://github.com/sve2-2021ss/project-hahn/blob/master/doc/shop_3.PNG)
-![Picture webshop ui](https://github.com/sve2-2021ss/project-hahn/blob/master/doc/shop_4.PNG)
-![Picture webshop ui](https://github.com/sve2-2021ss/project-hahn/blob/master/doc/shop_5.PNG)
+![Picture webshop ui](https://github.com/AndiHahn/AspNetCore-MicroserviceArchitecture-WebShop/blob/master/doc/shop_1.PNG)
+![Picture webshop ui](https://github.com/AndiHahn/AspNetCore-MicroserviceArchitecture-WebShop/blob/master/doc/shop_2.PNG)
+![Picture webshop ui](https://github.com/AndiHahn/AspNetCore-MicroserviceArchitecture-WebShop/blob/master/doc/shop_3.PNG)
+![Picture webshop ui](https://github.com/AndiHahn/AspNetCore-MicroserviceArchitecture-WebShop/blob/master/doc/shop_4.PNG)
+![Picture webshop ui](https://github.com/AndiHahn/AspNetCore-MicroserviceArchitecture-WebShop/blob/master/doc/shop_5.PNG)
